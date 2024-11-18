@@ -1,0 +1,11 @@
+.navbar {
+  position: absolute;
+  width: 236px;
+  height: 95vh;
+  background: beige;
+  left: -100%;
+  transition: all 1s;
+}
+.navbar.active {
+  left: 0;
+}
