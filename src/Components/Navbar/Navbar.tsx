@@ -5,9 +5,14 @@ import { ReactComponent as Dark } from "../../assets/dark.svg";
 import { ActiveContext, ThemeContext } from "../../Сontext/Context";
 
 import styles from "./Navbar.module.scss";
+// import { switchTheme } from "../../store/themeSlice";
+import { useDispatch } from "react-redux";
+import { switchTheme } from "../../store/themeSlice";
 const Navbar = () => {
   const context = useContext(ActiveContext);
   const theme = useContext(ThemeContext);
+  const dispatch = useDispatch();
+  // console.log(switchTheme);
   console.log(theme?.theme);
   return (
     <div
@@ -18,8 +23,10 @@ const Navbar = () => {
       <Link to="/">Home</Link>
       <Link to="/about-us">About us</Link>
       <div style={{ marginBottom: "5rem" }}></div>
-      <button onClick={theme?.toggleTheme}>
+      <button onClick={() => dispatch(switchTheme("light"))}>
         <Light />
+      </button>
+      <button onClick={() => dispatch(switchTheme("dark"))}>
         <Dark />
       </button>
     </div>
