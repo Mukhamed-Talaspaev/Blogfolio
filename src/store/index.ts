@@ -6,6 +6,7 @@ import { thunk } from "redux-thunk";
 import { logger } from "./Middlewares/logger";
 import { fetchPostsMiddlware } from "./Middlewares/fetchPostsMiddlware";
 import postSliceRTK from "./postSliceRTK";
+import { incrementMiddleWare } from "./Middlewares/incrementMiddleware";
 export default configureStore({
   reducer: {
     themeInStoreConfiguration: themeSlice,
@@ -14,6 +15,6 @@ export default configureStore({
     posts: postSliceRTK,
   },
   middleware(getDefaultMiddleware) {
-    return getDefaultMiddleware().concat(thunk, logger);
+    return getDefaultMiddleware().concat(thunk, logger, incrementMiddleWare);
   },
 });

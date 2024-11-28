@@ -18,7 +18,7 @@ const Home = () => {
         Go to Profile Page
       </NavLink>
       <h1> {count}</h1>
-      <button onClick={() => dispatch(increment())}>inc</button>
+      <button onClick={() => dispatch(increment(1))}>inc</button>
     </>
   );
 };
