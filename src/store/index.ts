@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import themeSlice from "./themeSlice";
 import counterSlice from "./counterSlice";
 import postSlice from "./postSlice";
+import UserSlice from "./userSlice";
 import { thunk } from "redux-thunk";
 import { logger } from "./Middlewares/logger";
 import { fetchPostsMiddlware } from "./Middlewares/fetchPostsMiddlware";
@@ -13,8 +14,9 @@ export default configureStore({
     counter: counterSlice,
     // posts: postSlice,
     posts: postSliceRTK,
+    user: UserSlice,
   },
   middleware(getDefaultMiddleware) {
-    return getDefaultMiddleware().concat(thunk, logger, incrementMiddleWare);
+    return getDefaultMiddleware().concat(thunk);
   },
 });

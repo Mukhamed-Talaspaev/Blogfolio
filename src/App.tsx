@@ -7,6 +7,8 @@ import AboutUs from "./Pages/AboutUs/AboutUs";
 import Layout from "./Pages/Layout/Layout";
 import Posts from "./Pages/Posts/Posts";
 import FavoritePost from "./Pages/FavoritePost/FavoritePost";
+import SignUp from "./Pages/SignUp/SignUp";
+import Activate from "./Pages/Activate/Activate";
 const App = () => {
   return (
     <>
@@ -18,6 +20,8 @@ const App = () => {
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="posts" element={<Posts />} />
           <Route path="/favorite" element={<FavoritePost />} />
+          <Route path="sign-up" element={<SignUp />} />
+          <Route path="activate/:uid/:token" element={<Activate />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
