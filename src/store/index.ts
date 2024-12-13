@@ -8,6 +8,7 @@ import { logger } from "./Middlewares/logger";
 import { fetchPostsMiddlware } from "./Middlewares/fetchPostsMiddlware";
 import postSliceRTK from "./postSliceRTK";
 import { incrementMiddleWare } from "./Middlewares/incrementMiddleware";
+import SignInSlice from "./SignInSlice";
 export default configureStore({
   reducer: {
     themeInStoreConfiguration: themeSlice,
@@ -15,6 +16,7 @@ export default configureStore({
     // posts: postSlice,
     posts: postSliceRTK,
     user: UserSlice,
+    signIn: SignInSlice,
   },
   middleware(getDefaultMiddleware) {
     return getDefaultMiddleware().concat(thunk);

@@ -9,6 +9,8 @@ import Posts from "./Pages/Posts/Posts";
 import FavoritePost from "./Pages/FavoritePost/FavoritePost";
 import SignUp from "./Pages/SignUp/SignUp";
 import Activate from "./Pages/Activate/Activate";
+import SignIn from "./Pages/SignIn/SignIn";
+import ProtectedRoute from "./Pages/ProtectedRoute/ProtectedRoute";
 const App = () => {
   return (
     <>
@@ -18,9 +20,17 @@ const App = () => {
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="about" element={<Navigate to={"/about-us"} />} />
           <Route path="/profile/:id" element={<Profile />} />
-          <Route path="posts" element={<Posts />} />
+          <Route
+            path="posts"
+            element={
+              <ProtectedRoute>
+                <Posts />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/favorite" element={<FavoritePost />} />
           <Route path="sign-up" element={<SignUp />} />
+          <Route path="sign-in" element={<SignIn />} />
           <Route path="activate/:uid/:token" element={<Activate />} />
           <Route path="*" element={<NotFound />} />
         </Route>

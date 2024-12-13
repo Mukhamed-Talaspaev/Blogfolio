@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { ReactComponent as Light } from "../../assets/light.svg";
 import { ReactComponent as Dark } from "../../assets/dark.svg";
 import { ActiveContext, ThemeContext } from "../../Сontext/Context";
@@ -13,6 +13,11 @@ const Navbar = () => {
   const theme = useContext(ThemeContext);
   const dispatch = useDispatch();
   // console.log(switchTheme);
+  const myClass =
+    () =>
+    ({ isActive }: { isActive: boolean }) =>
+      isActive ? `${styles.active}` : `${styles.nonActive}`;
+  const closeSlideBar = () => context?.SetIsActive(!context.isActive);
   console.log(theme?.theme);
   return (
     <div
@@ -20,8 +25,25 @@ const Navbar = () => {
         !context?.isActive ? styles.navbar : `${styles.navbar} ${styles.active}`
       }
     >
-      <Link to="/">Home</Link>
-      <Link to="/about-us">About us</Link>
+      <nav>
+        <NavLink onClick={closeSlideBar} className={myClass()} to="/">
+          Home
+        </NavLink>
+        <NavLink onClick={closeSlideBar} className={myClass()} to="/about-us">
+          About us
+        </NavLink>
+        <NavLink onClick={closeSlideBar} className={myClass()} to="/posts">
+          posts
+        </NavLink>
+
+        <NavLink onClick={closeSlideBar} className={myClass()} to="/sign-up">
+          Sign Up
+        </NavLink>
+        <NavLink onClick={closeSlideBar} className={myClass()} to="/sign-in">
+          Sign in
+        </NavLink>
+      </nav>
+
       <div style={{ marginBottom: "5rem" }}></div>
       <button onClick={() => dispatch(switchTheme("light"))}>
         <Light />
