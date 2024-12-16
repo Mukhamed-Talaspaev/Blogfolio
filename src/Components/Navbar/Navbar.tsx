@@ -1,24 +1,28 @@
 import { useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { ReactComponent as Light } from "../../assets/light.svg";
 import { ReactComponent as Dark } from "../../assets/dark.svg";
 import { ActiveContext, ThemeContext } from "../../Сontext/Context";
 
 import styles from "./Navbar.module.scss";
-// import { switchTheme } from "../../store/themeSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { switchTheme } from "../../store/themeSlice";
+import { stopTokenUpdate } from "../../store/SignInSlice";
 const Navbar = () => {
   const context = useContext(ActiveContext);
-  const theme = useContext(ThemeContext);
+  const { auth } = useSelector((state) => state.signIn);
   const dispatch = useDispatch();
-  // console.log(switchTheme);
+  const navigate = useNavigate();
+  const location = useLocation();
   const myClass =
     () =>
     ({ isActive }: { isActive: boolean }) =>
       isActive ? `${styles.active}` : `${styles.nonActive}`;
   const closeSlideBar = () => context?.SetIsActive(!context.isActive);
-  console.log(theme?.theme);
+  const signInHandler = () => {
+    navigate("/sign-in", { state: { from: location } });
+    closeSlideBar();
+  };
   return (
     <div
       className={
@@ -36,12 +40,13 @@ const Navbar = () => {
           posts
         </NavLink>
 
-        <NavLink onClick={closeSlideBar} className={myClass()} to="/sign-up">
-          Sign Up
-        </NavLink>
-        <NavLink onClick={closeSlideBar} className={myClass()} to="/sign-in">
-          Sign in
-        </NavLink>
+        {!auth ? (
+          <>
+            <button onClick={signInHandler}>Sign in</button>
+          </>
+        ) : (
+          <button onClick={() => dispatch(stopTokenUpdate())}>Log out</button>
+        )}
       </nav>
 
       <div style={{ marginBottom: "5rem" }}></div>

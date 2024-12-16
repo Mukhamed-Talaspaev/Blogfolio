@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
+let refreshInterval = null;
 export const signInUser = createAsyncThunk(
   "signIn/signInUser",
-  async (userLoginData, { rejectWithValue }) => {
+  async (userLoginData, { rejectWithValue, dispatch }) => {
     try {
-      const responce = await fetch(
+      const response = await fetch(
         "https://studapi.teachmeskills.by/auth/jwt/create/",
         {
           method: "POST",
@@ -15,19 +15,77 @@ export const signInUser = createAsyncThunk(
           credentials: "include",
         }
       );
-      if (!responce.ok) {
-        const errorData = await responce.json();
-        if (responce.status === 401) {
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (response.status === 401) {
           return rejectWithValue(errorData.detail);
         }
         throw new Error("error is here");
       }
-      const data = await responce.json();
-      localStorage.setItem("token", JSON.stringify(data));
+      const data = await response.json();
+      localStorage.setItem("access", JSON.stringify(data.access));
+      localStorage.setItem("refresh", JSON.stringify(data.refresh));
       console.log(data);
+      dispatch(startTokenUpdate());
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
+  }
+);
+export const refreshToken = createAsyncThunk(
+  "auth/refreshToken",
+  async (_, { rejectWithValue }) => {
+    try {
+      const refreshToken = localStorage.getItem("refresh");
+      if (!refreshToken) {
+        throw new Error("no refresh token");
+      }
+      const response = await fetch(
+        "https://studapi.teachmeskills.by/auth/jwt/refresh/",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            refresh: JSON.parse(refreshToken),
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        return rejectWithValue(errorData.detail);
+      }
+      const data = await response.json();
+      localStorage.setItem("access", data.access);
+      console.log("token was refreshed", data.access);
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+export const startTokenUpdate = createAsyncThunk(
+  "auth/startTokenUpdate",
+  async (_, { dispatch }) => {
+    if (refreshInterval) {
+      clearInterval(refreshInterval);
+    }
+    refreshInterval = setInterval(() => {
+      console.log("refreshin token");
+      dispatch(refreshToken());
+    }, 5 * 60 * 1000);
+  }
+);
+export const stopTokenUpdate = createAsyncThunk(
+  "auth/stopTokenUpdate",
+  async (_, { dispatch }) => {
+    if (refreshInterval) {
+      clearInterval(refreshInterval);
+      refreshInterval = null;
+    }
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    dispatch(SignInSlice.actions.logout());
   }
 );
 const SignInSlice = createSlice({
@@ -37,7 +95,12 @@ const SignInSlice = createSlice({
     isLoading: false,
     error: null as null | string,
   },
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.auth = false;
+      (state.error = null), (state.isLoading = false);
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(signInUser.fulfilled, (state) => {
       (state.auth = true), (state.isLoading = false);

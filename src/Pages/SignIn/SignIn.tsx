@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./SignIN.module.scss";
-import { useDispatch } from "react-redux";
-import { signInUser } from "../../store/SignInSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { refreshToken, signInUser } from "../../store/SignInSlice";
 import { ThunkDispatch } from "redux-thunk";
 import { Action } from "@reduxjs/toolkit";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 interface ILogin {
   email: string;
   password: string;
@@ -14,6 +14,10 @@ const SignIn = () => {
     email: "",
     password: "",
   });
+  const { pathname } = (useLocation().state || { from: "/" }).from;
+  const { auth } = useSelector((state) => state.signIn);
+  const navigate = useNavigate();
+  console.log("pathname in sign in ", pathname);
   const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setLoginData((prev) => ({ ...prev, [name]: value }));
@@ -23,6 +27,11 @@ const SignIn = () => {
     e.preventDefault();
     dispatch(signInUser(loginData));
   };
+  useEffect(() => {
+    if (auth) {
+      navigate(pathname, { replace: true });
+    }
+  }, [auth]);
   return (
     <div>
       <form className={styles.form} onSubmit={formHandler}>
