@@ -6,7 +6,7 @@ import UserSlice from "./userSlice";
 import { thunk } from "redux-thunk";
 import { logger } from "./Middlewares/logger";
 import { fetchPostsMiddlware } from "./Middlewares/fetchPostsMiddlware";
-import postSliceRTK from "./postSliceRTK";
+import paginationSlice from "./pagination";
 import { incrementMiddleWare } from "./Middlewares/incrementMiddleware";
 import SignInSlice from "./SignInSlice";
 export default configureStore({
@@ -14,7 +14,7 @@ export default configureStore({
     themeInStoreConfiguration: themeSlice,
     counter: counterSlice,
     // posts: postSlice,
-    posts: postSliceRTK,
+    pagination: paginationSlice,
     user: UserSlice,
     signIn: SignInSlice,
   },

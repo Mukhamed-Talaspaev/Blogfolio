@@ -21,14 +21,7 @@ const App = () => {
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="about" element={<Navigate to={"/about-us"} />} />
           <Route path="/profile/:id" element={<Profile />} />
-          <Route
-            path="posts"
-            element={
-              <ProtectedRoute>
-                <Posts />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="posts" element={<Posts />} />
           <Route
             path="my-posts"
             element={
