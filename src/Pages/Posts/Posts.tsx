@@ -2,7 +2,12 @@ import { Fragment, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPostsAction, selectPost } from "../../store/postSlice";
 import { useNavigate } from "react-router-dom";
-import { fetchPosts, setPage, setSearchQuery } from "../../store/pagination";
+import {
+  fetchPosts,
+  setOrdering,
+  setPage,
+  setSearchQuery,
+} from "../../store/pagination";
 import styles from "./Posts.module.scss";
 import { styled } from "styled-components";
 
@@ -21,6 +26,7 @@ const Posts = () => {
     itemsPerPage,
     totalItems,
     searchQuery,
+    ordering,
   } = useSelector((state) => state.pagination);
 
   const navigate = useNavigate();
@@ -30,9 +36,10 @@ const Posts = () => {
         limit: itemsPerPage,
         offset: (currentPage - 1) * itemsPerPage,
         searchQuery: searchQuery,
+        ordering: ordering,
       })
     );
-  }, [currentPage]);
+  }, [currentPage, ordering]);
   if (loading) {
     return <div>loading...</div>;
   }
@@ -80,6 +87,7 @@ const Posts = () => {
         limit: itemsPerPage,
         offset: 0,
         searchQuery: searchQuery,
+        ordering: ordering,
       })
     );
     dispatch(setPage(1));
@@ -87,6 +95,10 @@ const Posts = () => {
   const handlerInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     dispatch(setSearchQuery(value));
+  };
+  const handlerOrdering = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    // console.log(e.target);
+    dispatch(setOrdering(e.target.value));
   };
   return (
     <div>
@@ -100,6 +112,14 @@ const Posts = () => {
         />
         <button type="submit">Search</button>
       </form>
+      <div>
+        <label>Order by:</label>
+        <select value={ordering} onChange={handlerOrdering}>
+          <option value={""}>default</option>
+          <option value={"title"}>Title</option>
+          <option value={"date"}>date</option>
+        </select>
+      </div>
       <div className={styles.posts}>
         {posts.map((post, index) => (
           <div
@@ -109,6 +129,7 @@ const Posts = () => {
             key={post.id}
           >
             <h3>{post.title}</h3>
+            <h4>{post.id}</h4>
             <button
               onClick={() => {
                 dispatch(selectPost(post));

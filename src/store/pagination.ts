@@ -3,10 +3,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const fetchPosts = createAsyncThunk(
   "posts/fetchPosts",
   async (objectFromPostsPage, { rejectWithValue }) => {
-    const { limit, offset, searchQuery } = objectFromPostsPage;
+    const { limit, offset, searchQuery, ordering } = objectFromPostsPage;
     try {
       const response = await fetch(
-        `https://studapi.teachmeskills.by/blog/posts/?limit=${limit}&offset=${offset}&search=${searchQuery}`
+        `https://studapi.teachmeskills.by/blog/posts/?limit=${limit}&offset=${offset}&ordering=${ordering}&search=${searchQuery}`
       );
       if (!response.ok) {
         throw new Error("error");
@@ -26,6 +26,7 @@ const paginationSlice = createSlice({
     currentPage: 1,
     itemsPerPage: 10,
     searchQuery: "",
+    ordering: "",
     loading: false,
     error: null as string | null,
   },
@@ -35,6 +36,9 @@ const paginationSlice = createSlice({
     },
     setSearchQuery: (state, action) => {
       state.searchQuery = action.payload;
+    },
+    setOrdering: (state, action) => {
+      state.ordering = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -53,6 +57,6 @@ const paginationSlice = createSlice({
       });
   },
 });
-export const { setPage, setSearchQuery } = paginationSlice.actions;
+export const { setPage, setSearchQuery, setOrdering } = paginationSlice.actions;
 
 export default paginationSlice.reducer;
