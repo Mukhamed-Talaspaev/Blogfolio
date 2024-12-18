@@ -14,6 +14,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  console.log(location);
   const myClass =
     () =>
     ({ isActive }: { isActive: boolean }) =>
@@ -39,6 +40,11 @@ const Navbar = () => {
         <NavLink onClick={closeSlideBar} className={myClass()} to="/posts">
           posts
         </NavLink>
+        {auth && (
+          <NavLink onClick={closeSlideBar} className={myClass()} to="/my-posts">
+            my posts
+          </NavLink>
+        )}
 
         {!auth ? (
           <>
