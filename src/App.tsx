@@ -12,6 +12,7 @@ import Activate from "./Pages/Activate/Activate";
 import SignIn from "./Pages/SignIn/SignIn";
 import ProtectedRoute from "./Pages/ProtectedRoute/ProtectedRoute";
 import MyPosts from "./Pages/MyPosts/MyPosts";
+import CreatePost from "./Pages/CreatePost/CreatePost";
 const App = () => {
   return (
     <>
@@ -27,6 +28,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <MyPosts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="create-post"
+            element={
+              <ProtectedRoute>
+                <CreatePost />
               </ProtectedRoute>
             }
           />

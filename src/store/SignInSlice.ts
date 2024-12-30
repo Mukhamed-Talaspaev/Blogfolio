@@ -64,6 +64,39 @@ export const refreshToken = createAsyncThunk(
     }
   }
 );
+export const checkValidToken = createAsyncThunk(
+  "auth/checkValidToken",
+  async (_, { rejectWithValue, dispatch }) => {
+    try {
+      const access = localStorage.getItem("access");
+      if (!access) {
+        throw new Error("no refresh token");
+      }
+      const response = await fetch(
+        "https://studapi.teachmeskills.by/auth/jwt/verify/",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            token: JSON.parse(access),
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.log("token is not valid or expired");
+        return rejectWithValue(errorData.detail);
+      }
+
+      console.log("token is valid");
+      dispatch(addAuth());
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
 export const startTokenUpdate = createAsyncThunk(
   "auth/startTokenUpdate",
   async (_, { dispatch }) => {
@@ -100,6 +133,9 @@ const SignInSlice = createSlice({
       state.auth = false;
       (state.error = null), (state.isLoading = false);
     },
+    addAuth: (state) => {
+      state.auth = true;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(signInUser.fulfilled, (state) => {
@@ -114,4 +150,5 @@ const SignInSlice = createSlice({
     });
   },
 });
+export const { addAuth } = SignInSlice.actions;
 export default SignInSlice.reducer;

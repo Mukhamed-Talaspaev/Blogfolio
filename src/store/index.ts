@@ -9,6 +9,7 @@ import { fetchPostsMiddlware } from "./Middlewares/fetchPostsMiddlware";
 import paginationSlice from "./pagination";
 import { incrementMiddleWare } from "./Middlewares/incrementMiddleware";
 import SignInSlice from "./SignInSlice";
+import myPostsSlice from "./myPostsSlice";
 export default configureStore({
   reducer: {
     themeInStoreConfiguration: themeSlice,
@@ -17,6 +18,7 @@ export default configureStore({
     pagination: paginationSlice,
     user: UserSlice,
     signIn: SignInSlice,
+    myPosts: myPostsSlice,
   },
   middleware(getDefaultMiddleware) {
     return getDefaultMiddleware().concat(thunk);

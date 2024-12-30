@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { ReactComponent as Light } from "../../assets/light.svg";
 import { ReactComponent as Dark } from "../../assets/dark.svg";
@@ -7,11 +7,15 @@ import { ActiveContext, ThemeContext } from "../../Сontext/Context";
 import styles from "./Navbar.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { switchTheme } from "../../store/themeSlice";
-import { stopTokenUpdate } from "../../store/SignInSlice";
+import { checkValidToken, stopTokenUpdate } from "../../store/SignInSlice";
 const Navbar = () => {
   const context = useContext(ActiveContext);
   const { auth } = useSelector((state) => state.signIn);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(checkValidToken());
+  }, []);
   const navigate = useNavigate();
   const location = useLocation();
   console.log(location);
@@ -41,9 +45,22 @@ const Navbar = () => {
           posts
         </NavLink>
         {auth && (
-          <NavLink onClick={closeSlideBar} className={myClass()} to="/my-posts">
-            my posts
-          </NavLink>
+          <>
+            <NavLink
+              onClick={closeSlideBar}
+              className={myClass()}
+              to="/my-posts"
+            >
+              My Posts
+            </NavLink>
+            <NavLink
+              onClick={closeSlideBar}
+              className={myClass()}
+              to="/create-post"
+            >
+              Create Post
+            </NavLink>
+          </>
         )}
 
         {!auth ? (
