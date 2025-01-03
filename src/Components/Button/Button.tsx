@@ -1,6 +1,4 @@
-import { useContext } from "react";
 import style from "./Button.module.scss";
-import { Obj } from "../../Сontext/Context";
 interface IProps {
   children: React.ReactNode;
   isDisabled?: boolean;
@@ -13,8 +11,6 @@ const Button = ({
   btnType = "primary",
   value,
 }: IProps) => {
-  const objFromContext = useContext(Obj);
-  console.log(objFromContext);
   return (
     <button
       className={btnType === "secondary" ? `btn ${style.secondary}` : "btn"}

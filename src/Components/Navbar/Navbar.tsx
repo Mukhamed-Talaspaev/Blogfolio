@@ -12,6 +12,7 @@ const Navbar = () => {
   const context = useContext(ActiveContext);
   const { auth } = useSelector((state) => state.signIn);
   const dispatch = useDispatch();
+  const { active, navbar, nonActive } = styles;
 
   useEffect(() => {
     dispatch(checkValidToken());
@@ -22,18 +23,14 @@ const Navbar = () => {
   const myClass =
     () =>
     ({ isActive }: { isActive: boolean }) =>
-      isActive ? `${styles.active}` : `${styles.nonActive}`;
+      isActive ? `${active}` : `${nonActive}`;
   const closeSlideBar = () => context?.SetIsActive(!context.isActive);
   const signInHandler = () => {
     navigate("/sign-in", { state: { from: location } });
     closeSlideBar();
   };
   return (
-    <div
-      className={
-        !context?.isActive ? styles.navbar : `${styles.navbar} ${styles.active}`
-      }
-    >
+    <div className={!context?.isActive ? navbar : `${navbar} ${active}`}>
       <nav>
         <NavLink onClick={closeSlideBar} className={myClass()} to="/">
           Home
